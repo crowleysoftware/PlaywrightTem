@@ -1,13 +1,28 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page, request, APIRequestContext } from '@playwright/test';
 import { ChallengePage } from '../page-models/challenge-page';
 
+test.describe('submit-welcome-challenge', async () => {
+  
+  let page: Page;
+  let challengePage: ChallengePage;  
 
-test('test', async ({ page }) => {
-  const challengePage = new ChallengePage(page);
+  test.beforeAll(async ({ browser }) => {
+    //call api to reset the database
+    const ctx: APIRequestContext = await request.newContext();
+    ctx.post('https://localhost:5001/api/reset');
+    
+    page = await browser.newPage();
+    challengePage = new ChallengePage(page);
+    await challengePage.goto();
+  });
 
-  await challengePage.goto();
+  test('submit-incorrect-welcome-challenge', async () => {   
+    await challengePage.submtIncorrectWelcomeChallenge();
+  });
 
-  await page.getByRole('link', { name: 'Challenges' }).click();
-  await page.locator('form').filter({ hasText: 'submit Hint 0Hint 1Hint 2' }).getByRole('button').nth(2).click();
-  await page.getByRole('button', { name: 'Close Hint' }).click();
+  test('submit-correct-welcome-challenge', async () => {   
+    await challengePage.submitCorrectWelcomeChallenge();
+  });
+
 });
+
