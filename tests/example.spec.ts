@@ -23,13 +23,20 @@ test.describe("submit-welcome-challenge", async () => {
     await resetDatabase();
   });
 
+  //TODO: validate hacker is not on leader board
+
   test("submit-incorrect-welcome-challenge", async () => {
     await challengePage.submtIncorrectWelcomeChallenge();
   });
 
+  //TODO: validate hacker is STILL not on leader board
+
   test("submit-correct-welcome-challenge", async () => {
     await challengePage.submitCorrectWelcomeChallenge();
   });
+
+  //TODO: validate hacker is on leader board
+  
 });
 
 async function resetDatabase() {
