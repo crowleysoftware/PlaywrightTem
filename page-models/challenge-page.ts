@@ -16,8 +16,8 @@ export class ChallengePage {
     }
 
     async goto() {
-        await this.page.goto('https://localhost:5001/');
-        await this.page.getByRole('link', { name: 'Challenges' }).click();
+        await this.page.goto('https://localhost:5001/Challenges');
+      //  await this.page.getByRole('link', { name: 'Challenges' }).click();
     }
 
     async submtIncorrectWelcomeChallenge() {

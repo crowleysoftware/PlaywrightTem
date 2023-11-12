@@ -6,37 +6,49 @@ import {
   APIRequestContext,
 } from "@playwright/test";
 import { ChallengePage } from "../page-models/challenge-page";
+import { LeaderboardPage } from "../page-models/leaderboard-page";
 
 test.describe("submit-welcome-challenge", async () => {
   let page: Page;
   let challengePage: ChallengePage;
+  let leaderboardPage: LeaderboardPage;
 
   test.beforeAll(async ({ browser }) => {
     await resetDatabase();
-
+    
     page = await browser.newPage();
+    leaderboardPage = new LeaderboardPage(page);
     challengePage = new ChallengePage(page);
-    await challengePage.goto();
+    await page.goto("https://localhost:5001/");
   });
 
   test.afterAll(async () => {
     await resetDatabase();
   });
 
-  //TODO: validate hacker is not on leader board
+  //validate hacker is not on leader board until they solve the challenge
+  test("hacker-gets-on-leaderboard", async () => {
 
-  test("submit-incorrect-welcome-challenge", async () => {
+    //await leaderboardPage.goto();
+    await page.goto("https://localhost:5001/Leaderboard");
+    await leaderboardPage.isNotOnLeaderboard('<script>alert(\'got you\');</script>');
+    
+    await challengePage.goto();
     await challengePage.submtIncorrectWelcomeChallenge();
-  });
 
-  //TODO: validate hacker is STILL not on leader board
-
-  test("submit-correct-welcome-challenge", async () => {
+  //validate hacker is STILL not on leader board
+    //await leaderboardPage.goto();
+    await page.goto("https://localhost:5001/Leaderboard");
+    await leaderboardPage.isNotOnLeaderboard('<script>alert(\'got you\');</script>');
+    
+    await challengePage.goto();
     await challengePage.submitCorrectWelcomeChallenge();
-  });
 
-  //TODO: validate hacker is on leader board
-  
+  //validate hacker is on leader board
+    //await leaderboardPage.goto();
+    await page.goto("https://localhost:5001/Leaderboard");
+    await leaderboardPage.isOnLeaderboard('<script>alert(\'got you\');</script>');
+  });
 });
 
 async function resetDatabase() {
