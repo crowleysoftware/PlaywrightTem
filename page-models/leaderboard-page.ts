@@ -3,9 +3,17 @@ import exp from "constants";
 
 export class LeaderboardPage {
   private page: Page;
+  leaderboardLocator: Locator;
+  erlichLocator: Locator;
 
   constructor(page: Page) {
     this.page = page;
+    this.leaderboardLocator = this.page.getByText(
+      "Leaderboard # Hacker Total Last Solve"
+    );
+    this.erlichLocator = this.page.getByRole("cell", {
+      name: "Erlich Bachman",
+    });
   }
 
   async goto() {
@@ -13,14 +21,17 @@ export class LeaderboardPage {
   }
 
   async isNotOnLeaderboard(hackerName: string) {
-    expect(
-      this.page.getByRole("cell", { name: '<script>alert(\'got you\');</script>' })
-    ).not.toBeAttached();
+    await expect(this.erlichLocator).toBeVisible();
+    await expect(this.leaderboardLocator).not.toHaveText(hackerName);
   }
 
   async isOnLeaderboard(hackerName: string) {
-    expect(
-      this.page.getByRole("cell", { name: '<script>alert(\'got you\');</script>' })
-    ).toBeAttached();
+    await expect(this.erlichLocator).toBeVisible();
+
+    await expect(
+      this.page.getByRole("cell", {
+        name: hackerName,
+      })
+    ).toBeVisible();
   }
 }
