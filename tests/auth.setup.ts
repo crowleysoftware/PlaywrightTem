@@ -11,7 +11,7 @@ setup('authenticate', async ({page}) => {
     await page.getByPlaceholder('Email, phone, or Skype').fill('dante.hicks@crowleysoftwarellc.onmicrosoft.com');
     await page.getByRole('button', { name: 'Next' }).click();
     await page.getByPlaceholder('Password').click();
-    await page.getByPlaceholder('Password').fill(process.env.DANTE_PASSWORD);
+    await page.getByPlaceholder('Password').fill(process.env.DANTE_PASSWORD ?? 'wrong password!');
     await page.getByRole('button', { name: 'Sign in' }).click();
     await page.getByRole('button', { name: 'Yes' }).click();
 
