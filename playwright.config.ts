@@ -4,7 +4,7 @@ import { defineConfig, devices } from '@playwright/test';
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-// require('dotenv').config();
+ //require('dotenv').config();
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -34,7 +34,8 @@ export default defineConfig({
   projects: [
     { 
       name: 'setup', 
-      testMatch: /.*\.setup\.ts/ 
+      testMatch: /.*\.setup\.ts/ ,
+     // use: { video: 'on' }
     },
     {
       name: 'firefox',

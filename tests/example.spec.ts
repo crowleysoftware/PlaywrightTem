@@ -8,10 +8,13 @@ import {
 import { ChallengePage } from "../page-models/challenge-page";
 import { LeaderboardPage } from "../page-models/leaderboard-page";
 
-test("leaderboard test", async ({ page }) => {  
+const baseUrl = "https://localhost:5001/";
+const danteHackerName = "<script>alert('got you');</script>";
+
+test("leaderboard test", async ({ page }) => {
   const leaderboardPage = new LeaderboardPage(page);
-  await page.goto("https://localhost:5001/Leaderboard");
-  await leaderboardPage.isNotOnLeaderboard('<script>alert(\'got you\');</script>');
+  await leaderboardPage.goto();
+  await leaderboardPage.isNotOnLeaderboard(danteHackerName);
 });
 
 test.describe("submit-welcome-challenge", async () => {
@@ -21,11 +24,11 @@ test.describe("submit-welcome-challenge", async () => {
 
   test.beforeAll(async ({ browser }) => {
     await resetDatabase();
-    
+
     page = await browser.newPage();
     leaderboardPage = new LeaderboardPage(page);
     challengePage = new ChallengePage(page);
-    await page.goto("https://localhost:5001/");
+    await page.goto(baseUrl);
   });
 
   test.afterAll(async () => {
@@ -34,29 +37,27 @@ test.describe("submit-welcome-challenge", async () => {
 
   //validate hacker is not on leader board until they solve the challenge
   test("hacker-gets-on-leaderboard", async () => {
+    await leaderboardPage.goto();
+    await leaderboardPage.isNotOnLeaderboard(danteHackerName);
 
-    //await leaderboardPage.goto();
-    await page.goto("https://localhost:5001/Leaderboard");
-    await leaderboardPage.isNotOnLeaderboard('<script>alert(\'got you\');</script>');
-    
     await challengePage.goto();
     await challengePage.submtIncorrectWelcomeChallenge();
 
-  //validate hacker is STILL not on leader board
-    await page.goto("https://localhost:5001/Leaderboard");
-    await leaderboardPage.isNotOnLeaderboard('<script>alert(\'got you\');</script>');
-    
+    //validate hacker is STILL not on leader board
+    await leaderboardPage.goto();
+    await leaderboardPage.isNotOnLeaderboard(danteHackerName);
+
     await challengePage.goto();
     await challengePage.submitCorrectWelcomeChallenge();
 
-  //validate hacker is on leader board
-    await page.goto("https://localhost:5001/Leaderboard");
-    await leaderboardPage.isOnLeaderboard('<script>alert(\'got you\');</script>');
+    //validate hacker is on leader board
+    await leaderboardPage.goto();
+    await leaderboardPage.isOnLeaderboard(danteHackerName);
   });
 });
 
 async function resetDatabase() {
-   //call api to reset the database
-   const ctx: APIRequestContext = await request.newContext();
-   ctx.post('http://localhost:5258/reset');
+  //call api to reset the database
+  const ctx: APIRequestContext = await request.newContext();
+  ctx.post("http://localhost:5258/reset");
 }
