@@ -33,11 +33,13 @@ test.describe("submit-welcome-challenge", async () => {
 
   test.afterAll(async () => {
     await resetDatabase();
+    await page.close();
   });
 
   //validate hacker is not on leader board until they solve the challenge
   test("hacker-gets-on-leaderboard", async () => {
     await leaderboardPage.goto();
+    await page.waitForTimeout(5000);
     await leaderboardPage.isNotOnLeaderboard(danteHackerName);
 
     await challengePage.goto();
