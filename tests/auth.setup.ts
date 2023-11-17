@@ -1,5 +1,4 @@
 import {test as setup, expect} from '@playwright/test';
-import exp from 'constants';
 
 const authFile = 'playwright/.auth/user.json';
 

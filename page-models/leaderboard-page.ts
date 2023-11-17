@@ -8,6 +8,8 @@ export class LeaderboardPage {
 
   constructor(page: Page) {
     this.page = page;
+
+    //locator created before the page is loaded!
     this.leaderboardLocator = this.page.getByText(
       "Leaderboard # Hacker Total Last Solve"
     );
